@@ -2,6 +2,7 @@
 import jwt
 import datetime
 import secrets
+from datetime import datetime, timezone
 
 SECRET_KEY = "supersecretkey_change_in_production"
 REFRESH_SECRET = "refresh_secret_key"
@@ -26,8 +27,8 @@ def generate_refresh_token(user: str) -> str:
         "user": user,
         "type": "refresh",
         "jti": secrets.token_hex(16),  # уникальный ID токена
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(days=7),
-        "iat": datetime.datetime.utcnow()
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=15),
+        "iat": datetime.now(timezone.utc)
     }
     token = jwt.encode(payload, REFRESH_SECRET, algorithm="HS256")
     refresh_tokens_store.add(token)
